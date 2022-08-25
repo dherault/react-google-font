@@ -12,6 +12,10 @@ const createLink = (fonts, subsets, display, text) => {
     ]
   }, []).join('|')
 
+  if (families.length === 0) {
+      return null;
+  }
+  
   const link = document.createElement('link')
 
   link.rel = 'stylesheet'
@@ -31,6 +35,7 @@ const createLink = (fonts, subsets, display, text) => {
 
   return link
 }
+
 function GoogleFontLoader({ fonts, subsets, display = null, text = null }) {
   const [link, setLink] = useState(createLink(fonts, subsets, display, text))
 
@@ -41,9 +46,15 @@ function GoogleFontLoader({ fonts, subsets, display = null, text = null }) {
   }, [subsets, text])
 
   useEffect(() => {
-    document.head.appendChild(link)
+    if (link) {    
+      document.head.appendChild(link)
+    }
 
-    return () => document.head.removeChild(link)
+    return () => { 
+      if (link) {
+        document.head.removeChild(link)
+      }
+    }
   }, [link])
 
   useEffect(() => {
